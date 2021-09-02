@@ -241,6 +241,11 @@ defmodule CloudWatch do
 
       {:error, {type, _message}} when type in [:closed, :connect_timeout, :timeout] ->
         do_flush(state, opts, log_group_name, log_stream_name)
+
+      {:error, :econnrefused} ->
+        # Wait for network connection
+        Process.sleep(500)
+        do_flush(state, opts, log_group_name, log_stream_name)
     end
   end
 
